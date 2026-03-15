@@ -1,0 +1,35 @@
+services:
+  api:
+    build: .
+    container_name: sb3-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - local.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - ./logs:/app/logs
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: sb3-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: my_own_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
