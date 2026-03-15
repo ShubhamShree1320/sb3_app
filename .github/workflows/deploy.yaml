@@ -12,15 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: ssh to ec2
-        uses: appleboy/ssh-action@master
-        with:
-          host: 54.198.195.135
-          username: ubuntu
-          key: ${{ secrets.PRIVATE_SSH_KEY }}
-          port: 22
-          script: whoami
-  
       - name: Copy files to EC2
         uses: appleboy/scp-action@master
         with:
@@ -30,3 +21,17 @@ jobs:
           port: 22
           source: ".,!.git,!.venv,!__pycache__,!*.pyc"
           target: /home/ubuntu/sb3_api
+          
+      - name: ssh to ec2
+        uses: appleboy/ssh-action@master
+        with:
+          host: 54.198.195.135
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/sb3_api
+            docker compose down
+            docker compose up -d --build
+            docker compose logs --tail=50
+            echo "Deployed successfully at $(date)"
