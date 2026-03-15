@@ -20,5 +20,13 @@ jobs:
           key: ${{ secrets.PRIVATE_SSH_KEY }}
           port: 22
           script: whoami
-          # source: ".,!.git,!.venv,!__pycache__,!*.pyc"
-          # target: /home/ubuntu/sb3_api
+  
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: 54.198.195.135
+          username: ubuntu
+          key: ${{ secrets.PRIVATE_SSH_KEY }}
+          port: 22
+          source: ".,!.git,!.venv,!__pycache__,!*.pyc"
+          target: /home/ubuntu/sb3_api
