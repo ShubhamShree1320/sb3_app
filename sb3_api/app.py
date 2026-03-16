@@ -43,7 +43,7 @@ def create_app(
     # Initialize FastAPI app
     app = FastAPI(
         title=settings.SERVICE_NAME,
-        description="API for an agent interacting with Amazon Redshift data",
+        description="API fr an agent interacting with Amazon Redshift data",
         lifespan=lifespan,
     )
 
